@@ -1,10 +1,24 @@
 <!doctype html>
 <html>
-   <body>
+   <body style="background-color: #118ab2;">
 
-      <h1>Plots</h1>
-
+      <h1 style="text-align: center; color: white">
+         The resulting plot
+     </h1>
+     <div style="text-align: center;">
       <img src="{{ url_for('static', filename=plot) }}" />
+     </div>
+     <form style="text-align: center;">
+      <input 
+      style="width: 100px;
+            height: 50px;
+            font-size: larger;
+            border-radius: 10px;
+            border: 2px solid #06d6a0;
+            background-color: white;
+            color: #ef476f;" 
+      type="button" value="Go back!" onclick="history.back()">
+     </form>
 
    </body>
 </html>

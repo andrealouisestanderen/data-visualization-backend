@@ -1,48 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="./home.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Visualization</title>
 </head>
-<body>
-    <h1>
-        Data Visualization
+<body style="background-color: #118ab2;">
+    <h1 style="text-align: center; color: white; padding-top: 100px; font-size: 45px;">
+        DATA VISUALIZATON
     </h1>
-    <form name="myform" onsubmit="return OnSubmitForm();">
-        Chart Type
-        <div onclick="return display()">
-            <input type="radio" name="radio_chart">bar
-            <input type="radio" name="radio_chart" >line
-        </div>
+    <form name="myform" onsubmit="return OnSubmitForm();" style="color: white; text-align: center; padding-top: 100px;">
         <div>
             <label>File</label>
-            <input name="file" value="globalterrorism.csv" required>
+            <input 
+            style="border: 0;
+            outline: 0;
+            background: transparent;
+            border-bottom: 2px solid white;
+            font-size: large;
+            color: #ef476f;" 
+            name="file" 
+            value="globalterrorism.csv"
+            required>
+            <div style="padding-top: 20px; color: #073b4c; font-size: smaller;">
+                OBS: Remember to have your .csv file locally in the root-directory!
+            </div>
+        </div>
+        <h2 style="padding-top: 50px;">
+            Chart Type
+        </h2>
+        <div onclick="return display()" style="color: #ef476f;">
+            <input type="radio" name="radio_chart">bar
+            <input type="radio" name="radio_chart">line
         </div>
         <div id="bar" style="visibility: hidden">
             <div>
                 <label>Column</label>
-                <input name="column">
+                <input 
+                style="border: 0;
+                outline: 0;
+                background: transparent;
+                border-bottom: 2px solid white;
+                font-size: large;
+                color: #ef476f;" 
+                name="column">
             </div>
             <div>
                 <label>Sort</label>
-                <input name="sort">
+                <input
+                style="border: 0;
+                outline: 0;
+                background: transparent;
+                border-bottom: 2px solid white;
+                font-size: large;
+                color: #ef476f;" 
+                name="sort">
             </div>
         </div>
         <div id="line" style="visibility: hidden">
             <div>
                 <label>Year</label>
-                <input name="year">
+                <input 
+                style="border: 0;
+                outline: 0;
+                background: transparent;
+                border-bottom: 2px solid white;
+                font-size: large;
+                color: #ef476f;" 
+                name="year">
             </div>
             <div>
                 <label>Group</label>
-                <input name="group">
+                <input 
+                style="border: 0;
+                outline: 0;
+                background: transparent;
+                border-bottom: 2px solid white;
+                font-size: large;
+                color: #ef476f;
+                margin-bottom: 30px;" 
+                name="group">
             </div>
         </div>
         <div>
-            <button type="submit">Show chart</button>
+            <button 
+            style="width: 200px;
+            height: 100px;
+            font-size: larger;
+            border-radius: 10px;
+            border: 2px solid #06d6a0;
+            background-color: white;
+            color: #ef476f;"
+            type="submit">Show chart</button>
         </div>
     </form>
 
