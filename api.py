@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return render_template('index_test.html')
+    return render_template('home.html')
 
 @app.route("/bar-chart")
 def barChart():

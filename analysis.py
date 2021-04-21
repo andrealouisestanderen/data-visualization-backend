@@ -14,7 +14,6 @@ def barChart(file, column, sort_by_count):
     counts = df_parsed[column].value_counts(sort=sort).tolist()
     
     # Make plot
-    #plt.figure(figsize=)
     if sort:
         plt.bar(range(len(values)), list(map(float, counts)), color = colors.GREEN)
         plt.xticks(range(len(values)), values, rotation='vertical')
@@ -30,7 +29,7 @@ def barChart(file, column, sort_by_count):
 
 
 def lineChart(file, year, group): 
-    # in case of globalterrorism, recommended groups are:
+    # in case of globalterrorism.csv, recommended groups are:
     # attacktype1_txt, targtype1_txt, region_txt, success, suicide, weaptype1_txt
     count = 0
     style = 0
