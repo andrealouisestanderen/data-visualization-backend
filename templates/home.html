@@ -34,44 +34,9 @@
             <input type="radio" name="radio_chart">bar
             <input type="radio" name="radio_chart">line
         </div>
-        <div id="bar" style="visibility: hidden">
-            <div>
-                <label>Column</label>
-                <input 
-                style="border: 0;
-                outline: 0;
-                background: transparent;
-                border-bottom: 2px solid white;
-                font-size: large;
-                color: #ef476f;" 
-                name="column">
-            </div>
-            <div>
-                <label>Sort</label>
-                <input
-                style="border: 0;
-                outline: 0;
-                background: transparent;
-                border-bottom: 2px solid white;
-                font-size: large;
-                color: #ef476f;" 
-                name="sort">
-            </div>
-        </div>
-        <div id="line" style="visibility: hidden">
-            <div>
-                <label>Year</label>
-                <input 
-                style="border: 0;
-                outline: 0;
-                background: transparent;
-                border-bottom: 2px solid white;
-                font-size: large;
-                color: #ef476f;" 
-                name="year">
-            </div>
-            <div>
-                <label>Group</label>
+        <div id="bar" style="visibility: hidden; position: relative; top: 30px">
+            <div style="width: 200;">
+                <label>Name of column</label>
                 <input 
                 style="border: 0;
                 outline: 0;
@@ -79,14 +44,56 @@
                 border-bottom: 2px solid white;
                 font-size: large;
                 color: #ef476f;
-                margin-bottom: 30px;" 
+                width: fit-content;" 
+                name="column">
+            </div>
+            <div style="width: 200;">
+                <label>Sorted</label>
+                <input
+                style="border: 0;
+                outline: 0;
+                background: transparent;
+                border-bottom: 2px solid white;
+                font-size: large;
+                color: #ef476f;
+                width: fit-content;" 
+                name="sort">
+                <div style="padding-top: 20px; color: #073b4c; font-size: smaller;">
+                    1=sort, 0=unsorted.
+                </div>
+            </div>
+        </div>
+        <div id="line" style="visibility: hidden; position: relative; bottom: 60px;">
+            <div style="width: 200;">
+                <label>Name of year-column</label>
+                <input 
+                style="border: 0;
+                outline: 0;
+                background: transparent;
+                border-bottom: 2px solid white;
+                font-size: large;
+                color: #ef476f;
+                width: fit-content;" 
+                name="year">
+            </div>
+            <div style="width: 200;">
+                <label>Name of column to distribute over years</label>
+                <input 
+                style="border: 0;
+                outline: 0;
+                background: transparent;
+                border-bottom: 2px solid white;
+                font-size: large;
+                color: #ef476f;
+                margin-bottom: 30px;
+                width: fit-content;" 
                 name="group">
             </div>
         </div>
         <div>
             <button 
             style="width: 200px;
-            height: 100px;
+            height: 70px;
             font-size: larger;
             border-radius: 10px;
             border: 2px solid #06d6a0;
