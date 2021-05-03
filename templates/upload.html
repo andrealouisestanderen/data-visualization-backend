@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization</title>
+</head>
+
+<body style="background-color: #118ab2;">
+    <h1 style="text-align: center; color: white; padding-top: 100px; font-size: 45px;">
+        DATA VISUALIZATON
+    </h1>
+    <h2 style="text-align: center; color: white; padding-top: 100px; font-size: 30px;">
+        Choose a file for the visualization
+    </h2>
+    <div style="text-align: center; font-size: medium;
+    font-family: 'Courier New', Courier, monospace;
+    color: #073b4c;
+    text-align: center;">
+        <form id="fileform" method=post enctype=multipart/form-data> <label style="
+            width: 160px;
+            height: 46px;
+            font-size: larger;
+            border-radius: 10px;
+            border: 2px solid #06d6a0;
+            background-color: white;
+            color: #ef476f;
+            text-align: center;" for="file">
+            Choose file
+            </label>
+            <input type="file" accept=".csv" name="file" id="file" />
+            <style>
+                input[type="file"] {
+                    width: 0.1px;
+                    height: 0.1px;
+                    opacity: 0;
+                    overflow: hidden;
+                    position: absolute;
+                    z-index: -1;
+                }
+            </style>
+            <div id="filename" style="padding-top: 10px;">
+                No file chosen
+            </div>
+            <input style="width: fit-content;
+                height: fit-content;
+                font-size: larger;
+                border-radius: 10px;
+                border: 2px solid #06d6a0;
+                background-color: white;
+                color: #ef476f;
+                text-align: center;
+                margin-top: 30px;
+                font-family: inherit;" type=submit value="Upload file">
+        </form>
+    </div>
+    <script>
+        document.getElementById('file').onchange = function () {
+            document.getElementById('filename').innerHTML = 'Selected file: ' + this.value;
+        };
+    </script>
+</body>

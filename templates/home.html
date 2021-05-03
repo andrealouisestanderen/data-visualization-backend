@@ -1,136 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Visualization</title>
 </head>
-<body style="background-color: #118ab2;">
+
+<script type="text/javascript">
+    function OnSubmitForm() {
+        if (document.makeplotform.radio_chart[0].checked == true) {
+            document.makeplotform.action = "/bar-chart?";
+        }
+        if (document.makeplotform.radio_chart[1].checked == true) {
+            document.makeplotform.action = "/line-chart?";
+        }
+        if (document.makeplotform.radio_chart[2].checked == true) {
+            document.makeplotform.action = "/scatter-plot?";
+        }
+        return true;
+    }
+
+    function display() {
+        if (document.makeplotform.radio_chart[0].checked == true) {
+            document.getElementById("dd_col1").style.visibility = "visible";
+            document.getElementById("dd_col2").style.visibility = "hidden";
+            document.getElementById("dd_sort").style.visibility = "visible";
+            document.getElementById("dd_binsize").style.visibility = "visible";
+            document.getElementById("col1_label_name").innerHTML = 'Name of column';
+        }
+        if (document.makeplotform.radio_chart[1].checked == true) {
+            document.getElementById("dd_col1").style.visibility = "visible";
+            document.getElementById("dd_col2").style.visibility = "visible";
+            document.getElementById("dd_sort").style.visibility = "hidden";
+            document.getElementById("dd_binsize").style.visibility = "hidden";
+            document.getElementById("col1_label_name").innerHTML = 'Time-based column';
+        }
+        if (document.makeplotform.radio_chart[2].checked == true) {
+            document.getElementById("dd_col1").style.visibility = "visible";
+            document.getElementById("dd_col2").style.visibility = "visible";
+            document.getElementById("dd_sort").style.visibility = "hidden";
+            document.getElementById("dd_binsize").style.visibility = "hidden";
+            document.getElementById("col1_label_name").innerHTML = 'Name of column 1';
+        }
+    }
+
+    function setColumns() {
+        columns = '{{ columns }}'
+        var clean_columns = columns.replaceAll('&#39;', '').replace('[', '').replace(']', '').split(", ");
+        var dropdown = document.getElementById("selectColumn");
+        clean_columns.map(function (item) {
+            var option = document.createElement("option");
+            option.value = item;
+            option.text = item;
+            dropdown.appendChild(option)
+        });
+        var dropdown2 = document.getElementById("selectColumn2");
+        clean_columns.map(function (item) {
+            var option2 = document.createElement("option");
+            option2.value = item;
+            option2.text = item;
+            dropdown2.appendChild(option2)
+        });
+    }
+</script>
+
+<body style="background-color: #118ab2;" onload="setColumns()">
     <h1 style="text-align: center; color: white; padding-top: 100px; font-size: 45px;">
         DATA VISUALIZATON
     </h1>
-    <form name="myform" onsubmit="return OnSubmitForm();" style="color: white; text-align: center; padding-top: 100px;">
-        <div>
-            <label>File</label>
-            <input 
-            style="border: 0;
-            outline: 0;
-            background: transparent;
-            border-bottom: 2px solid white;
-            font-size: large;
-            color: #ef476f;" 
-            name="file" 
-            value="globalterrorism.csv"
-            required>
-            <div style="padding-top: 20px; color: #073b4c; font-size: smaller;">
-                OBS: Remember to have your .csv file locally in the root-directory!
-            </div>
+    <form name="makeplotform" onsubmit="return OnSubmitForm();"
+        style="color: white; text-align: center; padding-top: 80px;">
+        <div style="width: 200;">
+            <label>File chosen</label>
+            <input style="border: 0;
+                    outline: 0;
+                    background: transparent;
+                    border-bottom: 2px solid white;
+                    font-size: large;
+                    color: #073b4c;" name="file" value="{{ filename }}">
         </div>
         <h2 style="padding-top: 50px;">
             Chart Type
         </h2>
-        <div onclick="return display()" style="color: #ef476f;">
+        <div style="color: #073b4c" onclick=" return display()">
             <input type="radio" name="radio_chart">bar
             <input type="radio" name="radio_chart">line
+            <input type="radio" name="radio_chart">scatter
         </div>
-        <div id="bar" style="visibility: hidden; position: relative; top: 30px">
-            <div style="width: 200;">
-                <label>Name of column</label>
-                <input 
-                style="border: 0;
-                outline: 0;
-                background: transparent;
-                border-bottom: 2px solid white;
-                font-size: large;
-                color: #ef476f;
-                width: fit-content;" 
-                name="column">
-            </div>
-            <div style="width: 200;">
-                <label>Sorted</label>
-                <input
-                style="border: 0;
-                outline: 0;
-                background: transparent;
-                border-bottom: 2px solid white;
-                font-size: large;
-                color: #ef476f;
-                width: fit-content;" 
-                name="sort">
-                <div style="padding-top: 20px; color: #073b4c; font-size: smaller;">
-                    1=sort, 0=unsorted.
-                </div>
-            </div>
+        <div id="dd_col1" style="width: 200; visibility: hidden;">
+            <label id="col1_label_name">Name of column 1</label>
+            <select id="selectColumn" name="column1"></select>
         </div>
-        <div id="line" style="visibility: hidden; position: relative; bottom: 60px;">
-            <div style="width: 200;">
-                <label>Name of year-column</label>
-                <input 
-                style="border: 0;
-                outline: 0;
-                background: transparent;
-                border-bottom: 2px solid white;
-                font-size: large;
-                color: #ef476f;
-                width: fit-content;" 
-                name="year">
-            </div>
-            <div style="width: 200;">
-                <label>Name of column to distribute over years</label>
-                <input 
-                style="border: 0;
-                outline: 0;
-                background: transparent;
-                border-bottom: 2px solid white;
-                font-size: large;
-                color: #ef476f;
-                margin-bottom: 30px;
-                width: fit-content;" 
-                name="group">
-            </div>
+        <div id="dd_col2" style="width: 200; visibility: hidden;">
+            <label>Name of column 2</label>
+            <select id="selectColumn2" name="column2"></select>
+        </div>
+        <div id="dd_sort" style="width: 200; visibility: hidden;">
+            <label>Sorted</label>
+            <select name="sort" id="sort">
+                <option value="1">sorted</option>
+                <option value="0">unsorted</option>
+            </select>
+        </div>
+        <div id="dd_binsize" style="width: 200; visibility: hidden; position: relative; bottom: 45px;">
+            <label>Bin settings</label>
+            <select name="bins" id="bins">
+                <option value="default">use default</option>
+                <option value="head">show first 10 rows</option>
+            </select>
         </div>
         <div>
-            <button 
-            style="width: 200px;
-            height: 70px;
-            font-size: larger;
-            border-radius: 10px;
-            border: 2px solid #06d6a0;
-            background-color: white;
-            color: #ef476f;"
-            type="submit">Show chart</button>
+            <button style="width: 200px;
+                height: 70px;
+                font-size: larger;
+                border-radius: 10px;
+                border: 2px solid #06d6a0;
+                background-color: white;
+                color: #ef476f;" type="submit">Show chart</button>
         </div>
     </form>
-
-    <script type="text/javascript">
-        function OnSubmitForm()
-        {
-          if(document.myform.radio_chart[0].checked == true)
-          {
-            document.myform.action ="/bar-chart?";
-          }
-          else
-          if(document.myform.radio_chart[1].checked == true)
-          {
-            document.myform.action ="/line-chart?";
-          }
-          return true;
-        }
-
-        function display() {
-            if(document.myform.radio_chart[0].checked == true)
-            {
-                document.getElementById("bar").style.visibility="visible";  
-                document.getElementById("line").style.visibility="hidden";  
-            }
-            if(document.myform.radio_chart[1].checked == true)
-            {
-                document.getElementById("bar").style.visibility="hidden"; 
-                document.getElementById("line").style.visibility="visible";   
-            }
-        }
-        </script>
-    
 </body>
+
 </html>
