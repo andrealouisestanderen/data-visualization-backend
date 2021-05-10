@@ -26,22 +26,31 @@
         if (document.makeplotform.radio_chart[0].checked == true) {
             document.getElementById("dd_col1").style.visibility = "visible";
             document.getElementById("dd_col2").style.visibility = "hidden";
+            document.getElementById("dd_col3").style.visibility = "hidden";
+            document.getElementById("dd_col4").style.visibility = "hidden";
             document.getElementById("dd_sort").style.visibility = "visible";
-            document.getElementById("dd_binsize").style.visibility = "visible";
+            document.getElementById("dd_bars").style.visibility = "visible";
+            document.getElementById("dd_binsize").style.visibility = "hidden";
             document.getElementById("col1_label_name").innerHTML = 'Name of column';
         }
         if (document.makeplotform.radio_chart[1].checked == true) {
             document.getElementById("dd_col1").style.visibility = "visible";
             document.getElementById("dd_col2").style.visibility = "visible";
+            document.getElementById("dd_col3").style.visibility = "visible";
+            document.getElementById("dd_col4").style.visibility = "visible";
             document.getElementById("dd_sort").style.visibility = "hidden";
-            document.getElementById("dd_binsize").style.visibility = "hidden";
+            document.getElementById("dd_bars").style.visibility = "hidden";
+            document.getElementById("dd_binsize").style.visibility = "visible";
             document.getElementById("col1_label_name").innerHTML = 'Time-based column';
         }
         if (document.makeplotform.radio_chart[2].checked == true) {
             document.getElementById("dd_col1").style.visibility = "visible";
             document.getElementById("dd_col2").style.visibility = "visible";
+            document.getElementById("dd_col3").style.visibility = "hidden";
+            document.getElementById("dd_col4").style.visibility = "hidden";
             document.getElementById("dd_sort").style.visibility = "hidden";
-            document.getElementById("dd_binsize").style.visibility = "hidden";
+            document.getElementById("dd_bars").style.visibility = "hidden";
+            document.getElementById("dd_binsize").style.visibility = "visible";
             document.getElementById("col1_label_name").innerHTML = 'Name of column 1';
         }
     }
@@ -62,6 +71,20 @@
             option2.value = item;
             option2.text = item;
             dropdown2.appendChild(option2)
+        });
+        var dropdown3 = document.getElementById("selectColumn3");
+        clean_columns.map(function (item) {
+            var option3 = document.createElement("option");
+            option3.value = item;
+            option3.text = item;
+            dropdown3.appendChild(option3)
+        });
+        var dropdown4 = document.getElementById("selectColumn4");
+        clean_columns.map(function (item) {
+            var option4 = document.createElement("option");
+            option4.value = item;
+            option4.text = item;
+            dropdown4.appendChild(option4)
         });
     }
 </script>
@@ -97,18 +120,43 @@
             <label>Name of column 2</label>
             <select id="selectColumn2" name="column2"></select>
         </div>
-        <div id="dd_sort" style="width: 200; visibility: hidden;">
+        <div id="dd_col3" style="width: 200; visibility: hidden;">
+            <label>Name of column 3</label>
+            <select id="selectColumn3" name="column3">
+                <option value="none">none</option>
+            </select>
+        </div>
+        <div id="dd_col4" style="width: 200; visibility: hidden;">
+            <label>Name of column 4</label>
+            <select id="selectColumn4" name="column4">
+                <option value="none">none</option>
+            </select>
+        </div>
+        <div id="dd_sort" style="width: 200; visibility: hidden; position: relative; bottom: 45px;">
             <label>Sorted</label>
             <select name="sort" id="sort">
                 <option value="1">sorted</option>
                 <option value="0">unsorted</option>
             </select>
         </div>
+        <div id="dd_bars" style="width: 200; visibility: hidden; position: relative; bottom: 88px;">
+            <label>Adjust number of bars</label>
+            <select name="bars" id="bars">
+                <option value="default">use default</option>
+                <option value="head">show first 10 rows</option>
+                <option value="tail">show last 10 rows</option>
+            </select>
+        </div>
         <div id="dd_binsize" style="width: 200; visibility: hidden; position: relative; bottom: 45px;">
             <label>Bin settings</label>
             <select name="bins" id="bins">
                 <option value="default">use default</option>
-                <option value="head">show first 10 rows</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
             </select>
         </div>
         <div>

@@ -1,5 +1,5 @@
 import analysis
-from flask import Flask, session, request, render_template, redirect, url_for
+from flask import Flask, session, request, render_template, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 import os
 import json
@@ -46,9 +46,9 @@ def barChart():
     file = request.args.get('file')
     column1 = request.args.get('column1')
     sort = request.args.get('sort')
-    bins = request.args.get('bins')
+    bars = request.args.get('bars')
 
-    plot_name = analysis.barChart(file, column1, sort, bins)
+    plot_name = analysis.barChart(file, column1, sort, bars)
 
     return render_template('index.html', plot=plot_name)
 
@@ -57,10 +57,13 @@ def barChart():
 def lineChart():
 
     file = request.args.get('file')
-    year = request.args.get('column1')
-    group = request.args.get('column2')
+    time = request.args.get('column1')
+    col2 = request.args.get('column2')
+    col3 = request.args.get('column3')
+    col4 = request.args.get('column4')
+    bins = request.args.get('bins')
 
-    plot_name = analysis.lineChart(file, year, group)
+    plot_name = analysis.lineChart(file, time, col2, col3, col4, bins)
 
     return render_template('index.html', plot=plot_name)
 
@@ -71,8 +74,9 @@ def scatterPlot():
     file = request.args.get('file')
     column1 = request.args.get('column1')
     column2 = request.args.get('column2')
+    bins = request.args.get('bins')
 
-    plot_name = analysis.scatterPlot(file, column1, column2)
+    plot_name = analysis.scatterPlot(file, column1, column2, bins)
 
     return render_template('index.html', plot=plot_name)
 
