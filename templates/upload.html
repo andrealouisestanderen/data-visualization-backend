@@ -7,28 +7,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Visualization</title>
 </head>
+<div
+    style="background-image: url(../static/example.png); opacity: .30; background-size: 100%; position: fixed; top: 0; bottom: 0; right: 0; left: 0;">
+</div>
 
-<body style="background-color: #118ab2;">
-    <h1 style="text-align: center; color: white; padding-top: 100px; font-size: 45px;">
-        DATA VISUALIZATON
-    </h1>
-    <h2 style="text-align: center; color: white; padding-top: 100px; font-size: 30px;">
-        Choose a file for the visualization
-    </h2>
-    <div style="text-align: center; font-size: medium;
-    font-family: 'Courier New', Courier, monospace;
-    color: #073b4c;
-    text-align: center;">
+<body style="font-family: Verdana, sans-serif; font-variant: small-caps;">
+    <div style="background-color: #83c5be; opacity: .99;">
+        <h1 style="text-align: center; color: #ffddd2; padding-top: 50px; font-size: 45px; font-weight: 100;">
+            PlotMe
+        </h1>
+        <h2
+            style="text-align: center; color: white; font-size: 15px; position: relative; bottom: 20px; font-style: italic; font-weight: 100; padding-bottom: 20px;">
+            Like one of your french girls...
+        </h2>
+    </div>
+    <div
+        style="opacity: .90; color: #006d77; text-align: center; padding-top: 40px; background-color: #edf6f9; width: 1000px; align-content: center; margin: 0 auto; padding-bottom: 100px; margin-top: 50px;">
+        <h2 style="text-align: center; color: #006d77; padding-bottom: 50px; font-weight: 100;">
+            Choose A File For The Visualization
+        </h2>
         <form id="fileform" method=post enctype=multipart/form-data> <label style="
-            width: 160px;
-            height: 46px;
-            font-size: larger;
-            border-radius: 10px;
-            border: 2px solid #06d6a0;
-            background-color: white;
-            color: #ef476f;
-            text-align: center;" for="file">
-            Choose file
+            font-size: 20px;
+            padding: 10px 40px 10px 40px;
+            border-radius: 4px;
+            border: 2px solid #006d77;
+            background-color: #83c5be;
+            color: #ffddd2;
+            text-align: center;
+            cursor: pointer;" for="file">
+            Choose File
             </label>
             <input type="file" accept=".csv" name="file" id="file" />
             <style>
@@ -42,18 +49,17 @@
                 }
             </style>
             <div id="filename" style="padding-top: 10px;">
-                No file chosen
+                No File Chosen
             </div>
-            <input style="width: fit-content;
-                height: fit-content;
-                font-size: larger;
-                border-radius: 10px;
-                border: 2px solid #06d6a0;
-                background-color: white;
-                color: #ef476f;
-                text-align: center;
-                margin-top: 30px;
-                font-family: inherit;" type=submit value="Upload file">
+            <input style="font-size: 20px;
+            padding: 10px 40px 10px 40px;
+            border-radius: 4px;
+            border: 2px solid #006d77;
+            background-color: #83c5be;
+            color: #ffddd2;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 80px;" type=submit value=" Upload file">
         </form>
     </div>
     <script>

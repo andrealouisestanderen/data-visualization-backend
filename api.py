@@ -6,9 +6,6 @@ import json
 import matplotlib
 matplotlib.use('Agg')
 
-print("BAR CHART: http://127.0.0.1:5000/bar-chart?file=globalterrorism.csv&column=iyear&sort=0")
-print("LINE CHART: http://127.0.0.1:5000/line-chart?file=globalterrorism.csv&year=iyear&group=region_txt")
-
 UPLOAD_FOLDER = './files'
 ALLOWED_EXTENSIONS = set(['csv'])
 
@@ -40,7 +37,7 @@ def uploadFile():
     return render_template('upload.html')
 
 
-@ app.route("/bar-chart")
+@app.route("/bar-chart")
 def barChart():
 
     file = request.args.get('file')
@@ -53,7 +50,7 @@ def barChart():
     return render_template('index.html', plot=plot_name)
 
 
-@ app.route("/line-chart")
+@app.route("/line-chart")
 def lineChart():
 
     file = request.args.get('file')
@@ -68,7 +65,7 @@ def lineChart():
     return render_template('index.html', plot=plot_name)
 
 
-@ app.route("/scatter-plot")
+@app.route("/scatter-plot")
 def scatterPlot():
 
     file = request.args.get('file')
@@ -77,6 +74,34 @@ def scatterPlot():
     bins = request.args.get('bins')
 
     plot_name = analysis.scatterPlot(file, column1, column2, bins)
+
+    return render_template('index.html', plot=plot_name)
+
+
+@app.route("/histogram-plot")
+def histogramPlot():
+
+    file = request.args.get('file')
+    column1 = request.args.get('column1')
+    column2 = request.args.get('column2')
+    stat = request.args.get('stat')
+    bins = request.args.get('bins')
+
+    plot_name = analysis.histogramPlot(file, column1, column2, stat, bins)
+
+    return render_template('index.html', plot=plot_name)
+
+
+@app.route("/box-plot")
+def boxPlot():
+
+    file = request.args.get('file')
+    column1 = request.args.get('column1')
+    column2 = request.args.get('column2')
+    hue = request.args.get('column3')
+    bins = request.args.get('bins')
+
+    plot_name = analysis.boxPlot(file, column1, column2, hue, bins)
 
     return render_template('index.html', plot=plot_name)
 

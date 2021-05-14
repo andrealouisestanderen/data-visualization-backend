@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Visualization</title>
+    <title>PlotMe</title>
 </head>
 
 <script type="text/javascript">
@@ -19,6 +19,12 @@
         if (document.makeplotform.radio_chart[2].checked == true) {
             document.makeplotform.action = "/scatter-plot?";
         }
+        if (document.makeplotform.radio_chart[3].checked == true) {
+            document.makeplotform.action = "/histogram-plot?";
+        }
+        if (document.makeplotform.radio_chart[4].checked == true) {
+            document.makeplotform.action = "/box-plot?";
+        }
         return true;
     }
 
@@ -30,6 +36,8 @@
             document.getElementById("dd_col4").style.visibility = "hidden";
             document.getElementById("dd_sort").style.visibility = "visible";
             document.getElementById("dd_bars").style.visibility = "visible";
+            document.getElementById("dd_stat").style.visibility = "hidden";
+            document.getElementById("col2_none").style.visibility = "hidden";
             document.getElementById("dd_binsize").style.visibility = "hidden";
             document.getElementById("col1_label_name").innerHTML = 'Name of column';
         }
@@ -40,6 +48,8 @@
             document.getElementById("dd_col4").style.visibility = "visible";
             document.getElementById("dd_sort").style.visibility = "hidden";
             document.getElementById("dd_bars").style.visibility = "hidden";
+            document.getElementById("dd_stat").style.visibility = "hidden";
+            document.getElementById("col2_none").style.visibility = "hidden";
             document.getElementById("dd_binsize").style.visibility = "visible";
             document.getElementById("col1_label_name").innerHTML = 'Time-based column';
         }
@@ -50,8 +60,36 @@
             document.getElementById("dd_col4").style.visibility = "hidden";
             document.getElementById("dd_sort").style.visibility = "hidden";
             document.getElementById("dd_bars").style.visibility = "hidden";
+            document.getElementById("dd_stat").style.visibility = "hidden";
+            document.getElementById("col2_none").style.visibility = "hidden";
             document.getElementById("dd_binsize").style.visibility = "visible";
             document.getElementById("col1_label_name").innerHTML = 'Name of column 1';
+        }
+        if (document.makeplotform.radio_chart[3].checked == true) {
+            document.getElementById("dd_col1").style.visibility = "visible";
+            document.getElementById("dd_col2").style.visibility = "visible";
+            document.getElementById("dd_col3").style.visibility = "hidden";
+            document.getElementById("dd_col4").style.visibility = "hidden";
+            document.getElementById("dd_sort").style.visibility = "hidden";
+            document.getElementById("dd_bars").style.visibility = "hidden";
+            document.getElementById("dd_stat").style.visibility = "visible";
+            document.getElementById("col2_none").style.visibility = "visible";
+            document.getElementById("dd_binsize").style.visibility = "visible";
+            document.getElementById("col1_label_name").innerHTML = 'Name of distribution column';
+        }
+        if (document.makeplotform.radio_chart[4].checked == true) {
+            document.getElementById("dd_col1").style.visibility = "visible";
+            document.getElementById("dd_col2").style.visibility = "visible";
+            document.getElementById("dd_col3").style.visibility = "visible";
+            document.getElementById("dd_col4").style.visibility = "hidden";
+            document.getElementById("dd_sort").style.visibility = "hidden";
+            document.getElementById("dd_bars").style.visibility = "hidden";
+            document.getElementById("dd_stat").style.visibility = "hidden";
+            document.getElementById("col2_none").style.visibility = "hidden";
+            document.getElementById("dd_binsize").style.visibility = "visible";
+            document.getElementById("col1_label_name").innerHTML = 'Name of x column';
+            document.getElementById("col2_label_name").innerHTML = 'Name of y column';
+            document.getElementById("col3_label_name").innerHTML = 'Name of hue';
         }
     }
 
@@ -89,86 +127,111 @@
     }
 </script>
 
-<body style="background-color: #118ab2;" onload="setColumns()">
-    <h1 style="text-align: center; color: white; padding-top: 100px; font-size: 45px;">
-        DATA VISUALIZATON
-    </h1>
-    <form name="makeplotform" onsubmit="return OnSubmitForm();"
-        style="color: white; text-align: center; padding-top: 80px;">
-        <div style="width: 200;">
-            <label>File chosen</label>
-            <input style="border: 0;
+<body style="font-family: Verdana, sans-serif; font-variant: small-caps;" onload="setColumns()">
+    <div
+        style="background-image: url(../static/example.png); opacity: .30; background-size: 100%; position: fixed; top: 0; bottom: 0; right: 0; left: 0;">
+    </div>
+    <div style="background-color: #83c5be; opacity: .99;">
+        <h1 style="text-align: center; color: #ffddd2; padding-top: 50px; font-size: 45px; font-weight: 100;">
+            PlotMe
+        </h1>
+        <h2
+            style="text-align: center; color: white; font-size: 15px; position: relative; bottom: 20px; font-style: italic; font-weight: 100; padding-bottom: 20px;">
+            Like one of your french girls...
+        </h2>
+    </div>
+    <div
+        style="opacity: .90; color: #006d77; text-align: center; padding-top: 80px; background-color: #edf6f9; width: 1000px; align-content: center; margin: 0 auto; padding-bottom: 50px; margin-top: 20px;">
+        <form name="makeplotform" onsubmit="return OnSubmitForm();">
+            <div style="width: 200;">
+                <label>File chosen</label>
+                <input style="border: 0;
                     outline: 0;
                     background: transparent;
-                    border-bottom: 2px solid white;
+                    border-bottom: 2px solid #83c5be;
                     font-size: large;
-                    color: #073b4c;" name="file" value="{{ filename }}">
-        </div>
-        <h2 style="padding-top: 50px;">
-            Chart Type
-        </h2>
-        <div style="color: #073b4c" onclick=" return display()">
-            <input type="radio" name="radio_chart">bar
-            <input type="radio" name="radio_chart">line
-            <input type="radio" name="radio_chart">scatter
-        </div>
-        <div id="dd_col1" style="width: 200; visibility: hidden;">
-            <label id="col1_label_name">Name of column 1</label>
-            <select id="selectColumn" name="column1"></select>
-        </div>
-        <div id="dd_col2" style="width: 200; visibility: hidden;">
-            <label>Name of column 2</label>
-            <select id="selectColumn2" name="column2"></select>
-        </div>
-        <div id="dd_col3" style="width: 200; visibility: hidden;">
-            <label>Name of column 3</label>
-            <select id="selectColumn3" name="column3">
-                <option value="none">none</option>
-            </select>
-        </div>
-        <div id="dd_col4" style="width: 200; visibility: hidden;">
-            <label>Name of column 4</label>
-            <select id="selectColumn4" name="column4">
-                <option value="none">none</option>
-            </select>
-        </div>
-        <div id="dd_sort" style="width: 200; visibility: hidden; position: relative; bottom: 45px;">
-            <label>Sorted</label>
-            <select name="sort" id="sort">
-                <option value="1">sorted</option>
-                <option value="0">unsorted</option>
-            </select>
-        </div>
-        <div id="dd_bars" style="width: 200; visibility: hidden; position: relative; bottom: 88px;">
-            <label>Adjust number of bars</label>
-            <select name="bars" id="bars">
-                <option value="default">use default</option>
-                <option value="head">show first 10 rows</option>
-                <option value="tail">show last 10 rows</option>
-            </select>
-        </div>
-        <div id="dd_binsize" style="width: 200; visibility: hidden; position: relative; bottom: 45px;">
-            <label>Bin settings</label>
-            <select name="bins" id="bins">
-                <option value="default">use default</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-                <option value="1000">1000</option>
-            </select>
-        </div>
-        <div>
-            <button style="width: 200px;
-                height: 70px;
-                font-size: larger;
-                border-radius: 10px;
-                border: 2px solid #06d6a0;
-                background-color: white;
-                color: #ef476f;" type="submit">Show chart</button>
-        </div>
-    </form>
+                    color: #006d77;" name="file" value="{{ filename }}">
+            </div>
+            <h2 style="padding-top: 50px; font-weight: 100;">
+                Chart Type
+            </h2>
+            <div onclick=" return display()" style="color: #006d77">
+                <input type="radio" name="radio_chart">bar
+                <input type="radio" name="radio_chart">line
+                <input type="radio" name="radio_chart">scatter
+                <input type="radio" name="radio_chart">histogram
+                <input type="radio" name="radio_chart">box
+            </div>
+            <div id="dd_col1" style="width: 200; visibility: hidden;">
+                <label id="col1_label_name">Name of column 1</label>
+                <select id="selectColumn" name="column1"></select>
+            </div>
+            <div id="dd_col2" style="width: 200; visibility: hidden;">
+                <label id="col2_label_name">Name of column 2</label>
+                <select id="selectColumn2" name="column2">
+                    <option value="None" id="col2_none">none</option>
+                </select>
+            </div>
+            <div id="dd_col3" style="width: 200; visibility: hidden;">
+                <label id="col3_label_name">Name of column 3</label>
+                <select id="selectColumn3" name="column3">
+                    <option value="None">none</option>
+                </select>
+            </div>
+            <div id="dd_col4" style="width: 200; visibility: hidden;">
+                <label>Name of column 4</label>
+                <select id="selectColumn4" name="column4">
+                    <option value="None">none</option>
+                </select>
+            </div>
+            <div id="dd_sort" style="width: 200; visibility: hidden; position: relative; bottom: 45px;">
+                <label>Sorted</label>
+                <select name="sort" id="sort">
+                    <option value="1">sorted</option>
+                    <option value="0">unsorted</option>
+                </select>
+            </div>
+            <div id="dd_bars" style="width: 200; visibility: hidden; position: relative; bottom: 88px;">
+                <label>Adjust number of bars</label>
+                <select name="bars" id="bars">
+                    <option value="default">use default</option>
+                    <option value="head">show first 10 rows</option>
+                    <option value="tail">show last 10 rows</option>
+                </select>
+            </div>
+            <div id="dd_binsize" style="width: 200; visibility: hidden; position: relative; bottom: 45px;">
+                <label>Bin settings</label>
+                <select name="bins" id="bins">
+                    <option value="auto">use default</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                    <option value="1000">5000</option>
+                </select>
+            </div>
+            <div id="dd_stat" style="width: 200; visibility: hidden; position: relative; bottom: 45px;">
+                <label>Statistics</label>
+                <select name="stat" id="stat">
+                    <option value="count">count</option>
+                    <option value="frequency">frequency</option>
+                    <option value="density">density</option>
+                    <option value="probability">probability</option>
+                </select>
+            </div>
+            <div>
+                <button style="width: 200px;
+                height: 50px;
+                font-size: 20px;
+                border-radius: 4px;
+                border: 2px solid #006d77;
+                background-color: #83c5be;
+                color: #ffddd2;" type="submit">Show chart</button>
+            </div>
+        </form>
+    </div>
 </body>
 
 </html>

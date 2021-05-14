@@ -1,4 +1,5 @@
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
@@ -107,10 +108,10 @@ def lineChart(file, time, col2, col3, col4, bins):
     df = pd.read_csv('./files/' + file)
     columns = [col2, col3, col4]
     for col in columns:
-        if col != 'none':
+        if col != 'None':
             df_parsed = df[[time, col]]
 
-            if bins != 'default':
+            if bins != 'auto':
                 bins = int(bins)
                 df_parsed = df_parsed[::bins]
 
@@ -139,7 +140,7 @@ def lineChart(file, time, col2, col3, col4, bins):
 def scatterPlot(file, column1, column2, bins):
     df = pd.read_csv('./files/' + file)
 
-    if bins != 'default':
+    if bins != 'auto':
         bins = int(bins)
         df = df[::bins]
 
@@ -150,6 +151,45 @@ def scatterPlot(file, column1, column2, bins):
     plt.xlabel(column1)
     plt.ylabel(column2)
     plt.title(file)
+
+    plot_name = saveImage()
+
+    return plot_name
+
+
+def histogramPlot(file, column1, hue, stat, bins):
+    df = pd.read_csv('./files/' + file)
+    df = df.astype('str')
+
+    if hue != 'None':
+        #sns.histplot(data=df, x=column1, stat=stat, binwidth=bins, hue=column2)
+        sns.histplot(data=df, x=column1, bins=bins, hue=hue, kde=True)
+        plt.xticks(rotation=70, size=5)
+    else:
+        #sns.histplot(data=df, x=column1, stat=stat, binwidth=bins)
+        sns.histplot(data=df, x=column1, bins=bins, kde=True)
+        plt.xticks(rotation=70, size=5)
+
+    plot_name = saveImage()
+
+    return plot_name
+
+
+def boxPlot(file, column1, column2, hue, bins):
+    df = pd.read_csv('./files/' + file)
+
+    if bins != 'auto':
+        bins = int(bins)
+        df = df[::bins]
+
+    if hue != 'None':
+        #sns.histplot(data=df, x=column1, stat=stat, binwidth=bins, hue=column2)
+        sns.boxplot(data=df, x=column1, y=column2, hue=hue)
+        plt.xticks(rotation=70, size=5)
+    else:
+        #sns.histplot(data=df, x=column1, stat=stat, binwidth=bins)
+        sns.boxplot(data=df, x=column1, y=column2)
+        plt.xticks(rotation=70, size=5)
 
     plot_name = saveImage()
 
