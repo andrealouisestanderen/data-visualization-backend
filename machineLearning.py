@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 import itertools
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 import seaborn as sns
 import os
 import time
@@ -18,93 +20,112 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
+from astroML.utils import completeness_contamination
+from sklearn.cluster import KMeans
 
 # validation libraries
 from IPython.display import display
 from sklearn import metrics
 from matplotlib.colors import ListedColormap
 
+from sklearn.cluster import KMeans
+from matplotlib.colors import ListedColormap, colorConverter, LinearSegmentedColormap
+
 # Read csv file
 df = pd.read_csv('./files/globalterrorism.csv')
 
 clean_df = df[['region', 'region_txt', 'country', 'country_txt', 'suicide', 'success', 'iyear', 'imonth', 'iday',
-               'nkill', 'nkillus', 'nkillter', 'specificity', 'attacktype1', 'targtype1']].dropna()
+                'nkill', 'nkillus', 'nkillter', 'nwound', 'property', 'specificity', 'attacktype1', 'targtype1']].dropna()
 
-# could have weapon_type, gname, target_type, suicide, success also as targets
 
-# Transform pandas dataset to dataset for scikit learn
-X = clean_df[['attacktype1', 'targtype1']].to_numpy()
-y = clean_df['country'].to_numpy()
+def preprocess(target, target_txt, features):
 
-# Split test and train
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    # could have weapon_type, gname, target_type, suicide, success also as targets
 
-#ohe = OneHotEncoder(sparse=False)
-#terrorism_train_transformed = ohe.fit_transform(target)
+    # Transform pandas dataset to dataset for scikit learn
+    clean_df.rename(columns={target: 'target',
+                    target_txt: 'target_names'}, inplace=True)
+    target_names = clean_df.target_names.unique().tolist()
+    X = clean_df[features].to_numpy()
+    # X.append(target_names)
+    y = clean_df['target'].to_numpy()
+
+    #target = clean_df[['country_txt', 'country']].to_numpy()
+
+    #ohe = OneHotEncoder(sparse=False)
+    #terrorism_train_transformed = ohe.fit_transform(target)
+
+    return X, y, target_names
 
 
 def gaussianNB():
     """ supervised """
+
+    target = 'success'
+    target_txt = 'region_txt'
+    features = ['nkill', 'nwound']
+
+    X, y, target_names = preprocess(target, target_txt, features)
+    # Split test and train
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
     gnb = GaussianNB()
     y_pred = gnb.fit(X_train, y_train).predict(X_test)
 
-    plt.figure()
-    plt.xlim(0, 7)
-    plt.ylim(0, 15)
-    plot_ellipse(plt.gca(), gnb.theta_[0], np.identity(
-        2)*gnb.sigma_[0], color=colors.GREY)
-    plot_ellipse(plt.gca(), gnb.theta_[1], np.identity(
-        2)*gnb.sigma_[1], color=colors.GREEN)
+    disp = metrics.plot_confusion_matrix(gnb, X_test, y_test)
+    disp.figure_.suptitle("Confusion Matrix predicting success based on #kills and #wounded")
+    #x_vals = range(0, len(target_names))
+    #plt.xticks(x_vals, target_names, rotation=25, fontsize=5)
+    #plt.yticks(x_vals, target_names, rotation=75, fontsize=5)
 
     plot_name = saveImage()
 
     return plot_name
 
 
-def kNeighbours():
+def kMeans():
     """ unsupervised, clustering classification"""
 
-    # Create color maps
-    cmap_light = ListedColormap(['orange', 'cyan', 'cornflowerblue'])
-    cmap_bold = ['darkorange', 'c', 'darkblue']
+    target = 'country'
+    target_txt = 'region_txt'
+    features = ['nkill', 'nkillter', 'iday', 'imonth']
 
-    h = .02
+    X, y, target_names = preprocess(target, target_txt, features)
 
-    # build the model
-    clf = KNeighborsClassifier(n_neighbors=10)
-    clf.fit(X_train, y_train)
+    kmeans = KMeans(n_clusters=3)  # 3 - clusters
+    kmeans.fit(X)
 
-    # Plot the decision boundary. For that, we will assign a color to each
-    # point in the mesh [x_min, x_max]x[y_min, y_max].
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
-                         np.arange(y_min, y_max, h))
-    Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
+    # The cluster centers are stored in thecluster_centers_ attribute, and we plot them as triangles
+    discrete_scatter(X[:, 0], X[:, 1], kmeans.labels_, markers='o')
+    discrete_scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], markers='^', markeredgewidth=2) #range(len(kmeans.cluster_centers_)),
 
-    # Put the result into a color plot
-    Z = Z.reshape(xx.shape)
-    plt.figure(figsize=(8, 6))
-    plt.contourf(xx, yy, Z, cmap=cmap_light)
-
-    # Plot also the training points
-    sns.scatterplot(x=X[:, 0], y=X[:, 1],
-                    palette=cmap_bold, alpha=1.0, edgecolor="black")
-    plt.xlim(xx.min(), xx.max())
-    plt.ylim(yy.min(), yy.max())
+    plt.title('Kmeans clustering with 3 clusters based on #killed, \n #killedterrorists, the day and the month.')
 
     plot_name = saveImage()
 
-    return plot_name
+    return plot_name 
 
 
 def regression():
-    lr = LogisticRegression()
+
+    target = 'nkill'
+    target_txt = 'region_txt'
+    features = ['nwound']
+
+    X, y, target_names = preprocess(target, target_txt, features)
+    # Split test and train
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+    lr = LinearRegression()
     lr.fit(X_train, y_train)
     y_pred = lr.predict(X_test)
 
     plt.scatter(X_test, y_test,  color=colors.ORANGE)
     plt.plot(X_test, y_pred, color=colors.YELLOW, linewidth=2)
+    plt.xlabel(target)
+    plt.ylabel(features[0])
+
+    plt.title('A regression model for #wounded and #killed')
 
     plot_name = saveImage()
 
@@ -125,25 +146,84 @@ def saveImage():
     return new_plot_name
 
 
-def plot_ellipse(ax, mu, sigma, color="k", label=None):
+def discrete_scatter(x1, x2, y=None, markers=None, s=10, ax=None,
+                     labels=None, padding=.2, alpha=1, c=None, markeredgewidth=None):
+    """Adaption of matplotlib.pyplot.scatter to plot classes or clusters.
+
+    Parameters
+    ----------
+
+    x1 : nd-array
+        input data, first axis
+
+    x2 : nd-array
+        input data, second axis
+
+    y : nd-array
+        input data, discrete labels
+
+    cmap : colormap
+        Colormap to use.
+
+    markers : list of string
+        List of markers to use, or None (which defaults to 'o').
+
+    s : int or float
+        Size of the marker
+
+    padding : float
+        Fraction of the dataset range to use for padding the axes.
+
+    alpha : float
+        Alpha value for all points.
     """
-    Based on
-    http://stackoverflow.com/questions/17952171/not-sure-how-to-fit-data-with-a-gaussian-python.
-    """
-    from matplotlib.patches import Ellipse
-    # Compute eigenvalues and associated eigenvectors
-    vals, vecs = np.linalg.eigh(sigma)
+    if ax is None:
+        ax = plt.gca()
 
-    # Compute "tilt" of ellipse using first eigenvector
-    x, y = vecs[:, 0]
-    theta = np.degrees(np.arctan2(y, x))
+    if y is None:
+        y = np.zeros(len(x1))
 
-    # Eigenvalues give length of ellipse along each eigenvector
-    w, h = 2 * np.sqrt(vals)
+    unique_y = np.unique(y)
 
-    ax.tick_params(axis='both', which='major', labelsize=20)
-    ellipse = Ellipse(mu, w, h, theta, color=color, label=label)  # color="k")
-    ellipse.set_clip_box(ax.bbox)
-    ellipse.set_alpha(0.9)
-    ax.add_artist(ellipse)
-    return ellipse
+    if markers is None:
+        markers = ['o', '^', 'v', 'D', 's', '*', 'p', 'h', 'H', '8', '<', '>'] * 10
+
+    if len(markers) == 1:
+        markers = markers * len(unique_y)
+
+    if labels is None:
+        labels = unique_y
+
+    # lines in the matplotlib sense, not actual lines
+    lines = []
+
+    current_cycler = mpl.rcParams['axes.prop_cycle']
+
+    for i, (yy, cycle) in enumerate(zip(unique_y, current_cycler())):
+        mask = y == yy
+        # if c is none, use color cycle
+        if c is None:
+            color = cycle['color']
+        elif len(c) > 1:
+            color = c[i]
+        else:
+            color = c
+        # use light edge for dark markers
+        if np.mean(colorConverter.to_rgb(color)) < .4:
+            markeredgecolor = "black"
+        else:
+            markeredgecolor = "black"
+
+        lines.append(ax.plot(x1[mask], x2[mask], markers[i], markersize=s,
+                             label=labels[i], alpha=alpha, c=color,
+                             markeredgewidth=markeredgewidth,
+                             markeredgecolor=markeredgecolor)[0])
+
+    if padding != 0:
+        pad1 = x1.std() * padding
+        pad2 = x2.std() * padding
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+        ax.set_xlim(min(x1.min() - pad1, xlim[0]), max(x1.max() + pad1, xlim[1]))
+        ax.set_ylim(min(x2.min() - pad2, ylim[0]), max(x2.max() + pad2, ylim[1]))
+    return lines

@@ -83,16 +83,16 @@
         }
         if (document.makeplotform.radio_chart[5].checked == true) {
             document.getElementById("dd_map").style.visibility = "visible";
-            document.getElementById(
-                "dd_col2").style.visibility = "visible";
-            document.getElementById("col2_label_name").innerHTML =
-                'Name of column to plot';
             var ddl = document.getElementById("lonlat");
             var selectedValue = ddl.options[ddl.selectedIndex].value;
             if (selectedValue == "False") {
                 document.getElementById("dd_col3").style.visibility = "visible";
                 document.getElementById("col3_label_name")
                     .innerHTML = 'Name of countries-column';
+                document.getElementById(
+                    "dd_col2").style.visibility = "visible";
+                document.getElementById("col2_label_name").innerHTML =
+                    'Name of column to plot';
             }
         }
     }

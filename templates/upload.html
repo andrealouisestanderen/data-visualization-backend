@@ -69,7 +69,7 @@
             </h2>
             <div style="color: #006d77">
                 <input onclick=" return display()" type="radio" name="radio_chart">Gaussian naive bayes
-                <input onclick=" return display()" type="radio" name="radio_chart">K nearest neighbours
+                <input onclick=" return display()" type="radio" name="radio_chart">Kmeans
                 <input onclick=" return display()" type="radio" name="radio_chart">Regression
             </div>
             <div style="padding-top: 30px;">
@@ -80,6 +80,7 @@
                 border: 2px solid #006d77;
                 background-color: #83c5be;
                 visibility: hidden;
+                cursor: pointer;
                 color: #ffddd2;" type="submit">Run ML!</button>
             </div>
         </form>
@@ -97,7 +98,7 @@
                 document.MLform.action = "/gaussian-nb?";
             }
             if (document.MLform.radio_chart[1].checked == true) {
-                document.MLform.action = "/knn-clf?";
+                document.MLform.action = "/kmeans?";
             }
             if (document.MLform.radio_chart[2].checked == true) {
                 document.MLform.action = "/regression?";

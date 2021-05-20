@@ -128,10 +128,10 @@ def gaussianNB():
     return render_template('result.html', plot=plot_name)
 
 
-@app.route("/knn-clf")
-def kNeighbours():
+@app.route("/kmeans")
+def kMeans():
 
-    plot_name = machineLearning.kNeighbours()
+    plot_name = machineLearning.kMeans()
 
     return render_template('result.html', plot=plot_name)
 
