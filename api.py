@@ -1,4 +1,5 @@
 import analysis
+import machineLearning
 from flask import Flask, session, request, render_template, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 import os
@@ -32,7 +33,7 @@ def uploadFile():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
             columns = analysis.getColumns(filename)
-            return render_template('home.html', columns=columns, filename=filename)
+            return render_template('analysis.html', columns=columns, filename=filename)
 
     return render_template('upload.html')
 
@@ -47,7 +48,7 @@ def barChart():
 
     plot_name = analysis.barChart(file, column1, sort, bars)
 
-    return render_template('index.html', plot=plot_name)
+    return render_template('result.html', plot=plot_name)
 
 
 @app.route("/line-chart")
@@ -62,7 +63,7 @@ def lineChart():
 
     plot_name = analysis.lineChart(file, time, col2, col3, col4, bins)
 
-    return render_template('index.html', plot=plot_name)
+    return render_template('result.html', plot=plot_name)
 
 
 @app.route("/scatter-plot")
@@ -75,7 +76,7 @@ def scatterPlot():
 
     plot_name = analysis.scatterPlot(file, column1, column2, bins)
 
-    return render_template('index.html', plot=plot_name)
+    return render_template('result.html', plot=plot_name)
 
 
 @app.route("/histogram-plot")
@@ -89,7 +90,7 @@ def histogramPlot():
 
     plot_name = analysis.histogramPlot(file, column1, column2, stat, bins)
 
-    return render_template('index.html', plot=plot_name)
+    return render_template('result.html', plot=plot_name)
 
 
 @app.route("/box-plot")
@@ -103,7 +104,44 @@ def boxPlot():
 
     plot_name = analysis.boxPlot(file, column1, column2, hue, bins)
 
-    return render_template('index.html', plot=plot_name)
+    return render_template('result.html', plot=plot_name)
+
+
+@app.route("/map-plot")
+def mapPlot():
+
+    file = request.args.get('file')
+    lonlat = request.args.get('lonlat')
+    plot_col = request.args.get('column2')
+    countries = request.args.get('column3')
+
+    plot_name = analysis.mapPlot(file, lonlat, countries, plot_col)
+
+    return render_template('result.html', plot=plot_name)
+
+
+@app.route("/gaussian-nb")
+def gaussianNB():
+
+    plot_name = machineLearning.gaussianNB()
+
+    return render_template('result.html', plot=plot_name)
+
+
+@app.route("/knn-clf")
+def kNeighbours():
+
+    plot_name = machineLearning.kNeighbours()
+
+    return render_template('result.html', plot=plot_name)
+
+
+@app.route("/regression")
+def regression():
+
+    plot_name = machineLearning.regression()
+
+    return render_template('result.html', plot=plot_name)
 
 
 def allowed_file(filename):

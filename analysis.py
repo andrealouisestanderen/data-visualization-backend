@@ -1,7 +1,10 @@
 import pandas as pd
+import geopandas as gpd
 import seaborn as sns
+import pycountry
 import matplotlib.pyplot as plt
 import numpy as np
+import geopy
 import sys
 import os
 import colors
@@ -162,11 +165,11 @@ def histogramPlot(file, column1, hue, stat, bins):
     df = df.astype('str')
 
     if hue != 'None':
-        #sns.histplot(data=df, x=column1, stat=stat, binwidth=bins, hue=column2)
+        # sns.histplot(data=df, x=column1, stat=stat, binwidth=bins, hue=column2)
         sns.histplot(data=df, x=column1, bins=bins, hue=hue, kde=True)
         plt.xticks(rotation=70, size=5)
     else:
-        #sns.histplot(data=df, x=column1, stat=stat, binwidth=bins)
+        # sns.histplot(data=df, x=column1, stat=stat, binwidth=bins)
         sns.histplot(data=df, x=column1, bins=bins, kde=True)
         plt.xticks(rotation=70, size=5)
 
@@ -183,17 +186,62 @@ def boxPlot(file, column1, column2, hue, bins):
         df = df[::bins]
 
     if hue != 'None':
-        #sns.histplot(data=df, x=column1, stat=stat, binwidth=bins, hue=column2)
+        # sns.histplot(data=df, x=column1, stat=stat, binwidth=bins, hue=column2)
         sns.boxplot(data=df, x=column1, y=column2, hue=hue)
         plt.xticks(rotation=70, size=5)
     else:
-        #sns.histplot(data=df, x=column1, stat=stat, binwidth=bins)
+        # sns.histplot(data=df, x=column1, stat=stat, binwidth=bins)
         sns.boxplot(data=df, x=column1, y=column2)
         plt.xticks(rotation=70, size=5)
 
     plot_name = saveImage()
 
     return plot_name
+
+
+def mapPlot(file, lonlat, countries, plot_col):
+    df = pd.read_csv('./files/' + file)
+
+    world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+
+    if lonlat == 'True':
+        gdf = gpd.GeoDataFrame(
+            df, geometry=gpd.points_from_xy(df.Longitud, df.Latitud))
+        ax = world.plot(column=plot_col, color=colors.GREY,
+                        edgecolor='black', legend=True)
+        gdf.plot(ax=ax, color=colors.RED)
+
+    else:
+        location = pd.read_csv(
+            './files/world_country_and_usa_states_latitude_and_longitude_values.csv')
+        location.rename(columns={'country': 'name'}, inplace=True)
+        countries = df[[countries]].values.tolist()
+        df['CODE'] = alpha3code(countries)
+        world.columns = ['pop_est', 'continent',
+                         'name', 'CODE', 'gdp_md_est', 'geometry']
+        small_df = df[['CODE', plot_col]]
+        # TRIED TO ONCLUDE THE REST OF THE WORLD, BUT left-join DIDN'T WORK...
+        merge = pd.merge(world, small_df, on='CODE')
+        merge = pd.merge(merge, location, on='name')
+        merge.plot(column=plot_col, scheme="quantiles",
+                   legend=True, cmap='viridis')
+        plt.title(plot_col + ' in the world.')
+
+    plot_name = saveImage()
+
+    return plot_name
+
+
+def alpha3code(column):
+    CODE = []
+    for country in column:
+        try:
+            code = pycountry.countries.get(name=str(country[0])).alpha_3
+            CODE.append(code)
+        except:
+            CODE.append('None')
+
+    return CODE
 
 
 def saveImage():
