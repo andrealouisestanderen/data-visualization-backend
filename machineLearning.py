@@ -32,40 +32,44 @@ from sklearn.cluster import KMeans
 from matplotlib.colors import ListedColormap, colorConverter, LinearSegmentedColormap
 
 # Read csv file
-df = pd.read_csv('./files/globalterrorism.csv')
+full_df = pd.read_csv('./files/globalterrorism.csv')
 
-clean_df = df[['region', 'region_txt', 'country', 'country_txt', 'suicide', 'success', 'iyear', 'imonth', 'iday',
-                'nkill', 'nkillus', 'nkillter', 'nwound', 'property', 'specificity', 'attacktype1', 'targtype1']].dropna()
+clean_df = full_df[['region', 'region_txt', 'country', 'country_txt', 'suicide', 'success', 'iyear', 'imonth',
+                    'iday', 'nkill', 'nkillus', 'nkillter', 'nwound', 'property', 'specificity', 'attacktype1', 'targtype1']].dropna()
 
 
 def preprocess(target, target_txt, features):
 
     # could have weapon_type, gname, target_type, suicide, success also as targets
+    df = clean_df
 
     # Transform pandas dataset to dataset for scikit learn
-    clean_df.rename(columns={target: 'target',
-                    target_txt: 'target_names'}, inplace=True)
-    target_names = clean_df.target_names.unique().tolist()
-    X = clean_df[features].to_numpy()
-    # X.append(target_names)
-    y = clean_df['target'].to_numpy()
+    df.rename(columns={target: 'target',
+                       target_txt: 'target_names'}, inplace=True)
+    target_names = df.target_names.unique().tolist()
+    X = df[features].to_numpy()
+    y = df['target'].to_numpy()
 
     #target = clean_df[['country_txt', 'country']].to_numpy()
-
-    #ohe = OneHotEncoder(sparse=False)
-    #terrorism_train_transformed = ohe.fit_transform(target)
 
     return X, y, target_names
 
 
-def gaussianNB():
+def gaussianNB(target, features):
     """ supervised """
 
-    target = 'success'
+    # target = target  # 'success'
     target_txt = 'region_txt'
-    features = ['nkill', 'nwound']
+    # features = [features]  # ['nkill', 'nwound']
+
+    print('TARGET IN ML: ', target)
+    print('FEATURES IN ML: ', features)
 
     X, y, target_names = preprocess(target, target_txt, features)
+
+    print('X: ', X)
+    print('y: ', y)
+
     # Split test and train
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
@@ -73,7 +77,8 @@ def gaussianNB():
     y_pred = gnb.fit(X_train, y_train).predict(X_test)
 
     disp = metrics.plot_confusion_matrix(gnb, X_test, y_test)
-    disp.figure_.suptitle("Confusion Matrix predicting success based on #kills and #wounded")
+    disp.figure_.suptitle(
+        "Confusion Matrix predicting success based on #kills and #wounded")
     #x_vals = range(0, len(target_names))
     #plt.xticks(x_vals, target_names, rotation=25, fontsize=5)
     #plt.yticks(x_vals, target_names, rotation=75, fontsize=5)
@@ -83,12 +88,12 @@ def gaussianNB():
     return plot_name
 
 
-def kMeans():
+def kMeans(target, features):
     """ unsupervised, clustering classification"""
 
-    target = 'country'
+    # target = target  # 'country'
     target_txt = 'region_txt'
-    features = ['nkill', 'nkillter', 'iday', 'imonth']
+    # features = [features]  # ['nkill', 'nkillter', 'iday', 'imonth']
 
     X, y, target_names = preprocess(target, target_txt, features)
 
@@ -97,20 +102,24 @@ def kMeans():
 
     # The cluster centers are stored in thecluster_centers_ attribute, and we plot them as triangles
     discrete_scatter(X[:, 0], X[:, 1], kmeans.labels_, markers='o')
-    discrete_scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], markers='^', markeredgewidth=2) #range(len(kmeans.cluster_centers_)),
+    discrete_scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[
+                     :, 1], markers='^', markeredgewidth=2)  # range(len(kmeans.cluster_centers_)),
 
-    plt.title('Kmeans clustering with 3 clusters based on #killed, \n #killedterrorists, the day and the month.')
+    plt.title(
+        'Kmeans clustering with 3 clusters based on #killed, \n #killedterrorists, the day and the month.')
 
     plot_name = saveImage()
 
-    return plot_name 
+    return plot_name
 
 
-def regression():
+def regression(target, features):
 
-    target = 'nkill'
+    # target = target  # 'nkill'
     target_txt = 'region_txt'
-    features = ['nwound']
+    # features = [features]  # ['nwound']
+    print('TARG IN REG: ', target)
+    print('FEAT IN REG: ', features)
 
     X, y, target_names = preprocess(target, target_txt, features)
     # Split test and train
@@ -186,7 +195,8 @@ def discrete_scatter(x1, x2, y=None, markers=None, s=10, ax=None,
     unique_y = np.unique(y)
 
     if markers is None:
-        markers = ['o', '^', 'v', 'D', 's', '*', 'p', 'h', 'H', '8', '<', '>'] * 10
+        markers = ['o', '^', 'v', 'D', 's', '*',
+                   'p', 'h', 'H', '8', '<', '>'] * 10
 
     if len(markers) == 1:
         markers = markers * len(unique_y)
@@ -224,6 +234,8 @@ def discrete_scatter(x1, x2, y=None, markers=None, s=10, ax=None,
         pad2 = x2.std() * padding
         xlim = ax.get_xlim()
         ylim = ax.get_ylim()
-        ax.set_xlim(min(x1.min() - pad1, xlim[0]), max(x1.max() + pad1, xlim[1]))
-        ax.set_ylim(min(x2.min() - pad2, ylim[0]), max(x2.max() + pad2, ylim[1]))
+        ax.set_xlim(
+            min(x1.min() - pad1, xlim[0]), max(x1.max() + pad1, xlim[1]))
+        ax.set_ylim(
+            min(x2.min() - pad2, ylim[0]), max(x2.max() + pad2, ylim[1]))
     return lines

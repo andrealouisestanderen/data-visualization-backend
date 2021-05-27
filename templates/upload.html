@@ -72,7 +72,51 @@
                 <input onclick=" return display()" type="radio" name="radio_chart">Kmeans
                 <input onclick=" return display()" type="radio" name="radio_chart">Regression
             </div>
-            <div style="padding-top: 30px;">
+            <div id="dd_targ" style="width: 200; visibility: hidden;">
+                <label id="targ_label_name">Name of target variable</label>
+                <select name="target" id="target">
+                    <option value="region">region</option>
+                    <option value="country">country</option>
+                    <option selected="selected" value="suicide">suicide</option>
+                    <option value="success">success</option>
+                    <option value="property">property harmed</option>
+                    <option value="specificity">specificity</option>
+                    <option value="nkill">number killed</option>
+                    <option value="nwound">number wounded</option>
+                    <option value="nkillus">number killed us</option>
+                    <option value="nkillter">number killed terrorists</option>
+                    <option value="attacktype1">attacktype</option>
+                    <option value="targtype1">targettype</option>
+                    <option value="iday">day</option>
+                    <option value="imonth">month</option>
+                    <option value="iyear">year</option>
+                </select>
+            </div>
+            <div id="dd_feat" style="width: 200; visibility: hidden; padding-top: 5px;">
+                <label style="position: relative; bottom: 55px" id="feat_label_name">Select your features</label>
+                <select size="5" name="features" id="features" multiple>
+                    <option value="region">region</option>
+                    <option value="country">country</option>
+                    <option value="suicide">suicide</option>
+                    <option value="success">success</option>
+                    <option value="property">property harmed</option>
+                    <option value="specificity">specificity</option>
+                    <option selected="selected" value="nkill">number killed</option>
+                    <option selected="selected" value="nwound">number wounded</option>
+                    <option value="nkillus">number killed us</option>
+                    <option value="nkillter">number killed terrorists</option>
+                    <option value="attacktype1">attacktype</option>
+                    <option value="targtype1">targettype</option>
+                    <option value="iday">day</option>
+                    <option value="imonth">month</option>
+                    <option value="iyear">year</option>
+                </select>
+            </div>
+            <div id="warning"
+                style="font-size: 10px; padding-top: 20px; font-weight: bold; visibility: hidden; position: relative;">
+                NB: DO NOT CHOOSE THE TARGET AS A FEATURE!
+            </div>
+            <div style="padding-top: 30px; position: relative;">
                 <button id="submitButton" style="width: 200px;
                 height: 50px;
                 font-size: 20px;
@@ -106,8 +150,12 @@
             return true;
         }
 
+
         function display() {
             document.getElementById('submitButton').style.visibility = 'visible';
+            document.getElementById('dd_targ').style.visibility = 'visible';
+            document.getElementById('dd_feat').style.visibility = 'visible';
+            document.getElementById('warning').style.visibility = 'visible';
         }
     </script>
 </body>

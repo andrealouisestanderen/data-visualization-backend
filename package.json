@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "fs": "*"
+    "fs": "*",
+    "jquery": "^3.6.0"
   }
 }

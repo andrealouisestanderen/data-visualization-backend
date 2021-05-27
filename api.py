@@ -123,7 +123,12 @@ def mapPlot():
 @app.route("/gaussian-nb")
 def gaussianNB():
 
-    plot_name = machineLearning.gaussianNB()
+    target = request.args.get('target')
+    features = request.args.getlist('features')
+    print('targ: ', target)
+    print('feat: ', features)
+
+    plot_name = machineLearning.gaussianNB(target, features)
 
     return render_template('result.html', plot=plot_name)
 
@@ -131,7 +136,10 @@ def gaussianNB():
 @app.route("/kmeans")
 def kMeans():
 
-    plot_name = machineLearning.kMeans()
+    target = request.args.get('target')
+    features = request.args.getlist('features')
+
+    plot_name = machineLearning.kMeans(target, features)
 
     return render_template('result.html', plot=plot_name)
 
@@ -139,7 +147,10 @@ def kMeans():
 @app.route("/regression")
 def regression():
 
-    plot_name = machineLearning.regression()
+    target = request.args.get('target')
+    features = request.args.getlist('features')
+
+    plot_name = machineLearning.regression(target, features)
 
     return render_template('result.html', plot=plot_name)
 
