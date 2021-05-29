@@ -139,9 +139,9 @@ def kMeans():
     target = request.args.get('target')
     features = request.args.getlist('features')
 
-    plot_name, silhouette_avg = machineLearning.kMeans(target, features)
+    plot_name, score = machineLearning.kMeans(target, features)
 
-    return render_template('result.html', plot=plot_name, score=silhouette_avg)
+    return render_template('result.html', plot=plot_name, score=score)
 
 
 @app.route("/regression")
@@ -150,9 +150,9 @@ def regression():
     target = request.args.get('target')
     feature = request.args.getlist('feature')
 
-    plot_name = machineLearning.regression(target, feature)
+    plot_name, score = machineLearning.regression(target, feature)
 
-    return render_template('result.html', plot=plot_name)
+    return render_template('result.html', plot=plot_name, score=score)
 
 
 def allowed_file(filename):

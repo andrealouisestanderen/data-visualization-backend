@@ -83,9 +83,11 @@ def kMeans(target, features):
 
     silhouette_avg = metrics.silhouette_score(X, grouping.labels_)
 
+    score = "{:.2f}".format(silhouette_avg)
+
     plot_name = saveImage()
 
-    return plot_name, silhouette_avg
+    return plot_name, score
 
 
 def regression(target, features):
@@ -109,9 +111,13 @@ def regression(target, features):
 
     plt.title('A regression model for #wounded and #killed')
 
+    variance_score = metrics.explained_variance_score(y_test, y_pred)
+
+    score = "{:.2f}".format(variance_score)
+
     plot_name = saveImage()
 
-    return plot_name
+    return plot_name, score
 
 
 def saveImage():
