@@ -39,14 +39,10 @@ rel_df = full_df[['gname', 'region', 'region_txt', 'country', 'country_txt', 'su
 
 clean_df = rel_df.loc[(rel_df != 'Unknown').all(1)]
 
-print('shape of df: ', str(clean_df.shape))
-
 # include only the rows with groupnames that are involved in more than 1000 (top 10) attacks
 group_names = clean_df['gname'].value_counts()[0:10].index.tolist()
 
 smaller_df = clean_df.loc[clean_df['gname'].isin(group_names)]
-
-print('shape of df after removed gname: ', str(smaller_df.shape))
 
 
 def gaussianNB(target, features):
@@ -70,9 +66,11 @@ def gaussianNB(target, features):
     #plt.xticks(x_vals, target_names, rotation=25, fontsize=5)
     #plt.yticks(x_vals, target_names, rotation=75, fontsize=5)
 
+    score = "{:.2f}".format(gnb.score(X_test, y_test))
+
     plot_name = saveImage()
 
-    return plot_name
+    return plot_name, score
 
 
 def kMeans(target, features):

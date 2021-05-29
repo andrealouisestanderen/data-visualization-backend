@@ -128,9 +128,9 @@ def gaussianNB():
     print('targ: ', target)
     print('feat: ', features)
 
-    plot_name = machineLearning.gaussianNB(target, features)
+    plot_name, score = machineLearning.gaussianNB(target, features)
 
-    return render_template('result.html', plot=plot_name)
+    return render_template('result.html', plot=plot_name, score=score)
 
 
 @app.route("/kmeans")
