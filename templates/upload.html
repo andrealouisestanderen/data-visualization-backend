@@ -93,7 +93,7 @@
                     <option value="iyear">year</option>
                 </select>
             </div>
-            <div id="dd_feat" style="width: 200; visibility: hidden; padding-top: 5px;">
+            <div id="dd_feat" style="width: 200; visibility: hidden; padding-top: 5px; position: relative;">
                 <label style="position: relative; bottom: 55px" id="feat_label_name">Select your features</label>
                 <select size="5" name="features" id="features" multiple>
                     <option value="gname">terrorist group</option>
@@ -176,13 +176,19 @@
         function display() {
             document.getElementById('submitButton').style.visibility = 'visible';
             document.getElementById('dd_targ').style.visibility = 'visible';
+            document.getElementById("dd_feat").style.visibility = 'visible';
+            document.getElementById("dd_feat_single").style.visibility = 'visible';
             document.getElementById('warning').style.visibility = 'visible';
+            document.getElementById("dd_feat").style.bottom = '0px';
 
+            if (document.MLform.radio_chart[1].checked == true) {
+                document.getElementById("dd_targ").style.visibility = 'hidden';
+                document.getElementById("dd_feat_single").style.visibility = 'hidden';
+                document.getElementById("dd_feat").style.bottom = '25px';
+            }
             if (document.MLform.radio_chart[2].checked == true) {
                 document.getElementById("dd_feat").style.visibility = 'hidden';
-                document.getElementById("dd_feat_single").style.visibility = 'visible';
             } else {
-                document.getElementById('dd_feat').style.visibility = 'visible';
                 document.getElementById("dd_feat_single").style.visibility = 'hidden';
             }
         }
