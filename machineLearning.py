@@ -34,41 +34,28 @@ from matplotlib.colors import ListedColormap, colorConverter, LinearSegmentedCol
 # Read csv file
 full_df = pd.read_csv('./files/globalterrorism.csv')
 
-clean_df = full_df[['region', 'region_txt', 'country', 'country_txt', 'suicide', 'success', 'iyear', 'imonth',
-                    'iday', 'nkill', 'nkillus', 'nkillter', 'nwound', 'property', 'specificity', 'attacktype1', 'targtype1']].dropna()
+rel_df = full_df[['gname', 'region', 'region_txt', 'country', 'country_txt', 'suicide', 'success', 'iyear', 'imonth',
+                  'iday', 'nkill', 'nkillus', 'nkillter', 'nwound', 'property', 'specificity', 'attacktype1', 'attacktype1_txt', 'targtype1', 'targtype1_txt']].dropna()
 
+clean_df = rel_df.loc[(rel_df != 'Unknown').all(1)]
 
-def preprocess(target, target_txt, features):
+print('shape of df: ', str(clean_df.shape))
 
-    # could have weapon_type, gname, target_type, suicide, success also as targets
-    df = clean_df
+# include only the rows with groupnames that are involved in more than 1000 (top 10) attacks
+group_names = clean_df['gname'].value_counts()[0:10].index.tolist()
 
-    # Transform pandas dataset to dataset for scikit learn
-    df.rename(columns={target: 'target',
-                       target_txt: 'target_names'}, inplace=True)
-    target_names = df.target_names.unique().tolist()
-    X = df[features].to_numpy()
-    y = df['target'].to_numpy()
+smaller_df = clean_df.loc[clean_df['gname'].isin(group_names)]
 
-    #target = clean_df[['country_txt', 'country']].to_numpy()
-
-    return X, y, target_names
+print('shape of df after removed gname: ', str(smaller_df.shape))
 
 
 def gaussianNB(target, features):
     """ supervised """
 
-    # target = target  # 'success'
-    target_txt = 'region_txt'
-    # features = [features]  # ['nkill', 'nwound']
+    df = smaller_df
 
-    print('TARGET IN ML: ', target)
-    print('FEATURES IN ML: ', features)
-
-    X, y, target_names = preprocess(target, target_txt, features)
-
-    print('X: ', X)
-    print('y: ', y)
+    X = df[features].to_numpy()
+    y = df[target].to_numpy()
 
     # Split test and train
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
@@ -91,11 +78,10 @@ def gaussianNB(target, features):
 def kMeans(target, features):
     """ unsupervised, clustering classification"""
 
-    # target = target  # 'country'
-    target_txt = 'region_txt'
-    # features = [features]  # ['nkill', 'nkillter', 'iday', 'imonth']
+    df = smaller_df
 
-    X, y, target_names = preprocess(target, target_txt, features)
+    X = df[features].to_numpy()
+    y = df[target].to_numpy()
 
     kmeans = KMeans(n_clusters=3)  # 3 - clusters
     kmeans.fit(X)
@@ -115,15 +101,17 @@ def kMeans(target, features):
 
 def regression(target, features):
 
-    # target = target  # 'nkill'
-    target_txt = 'region_txt'
-    # features = [features]  # ['nwound']
-    print('TARG IN REG: ', target)
-    print('FEAT IN REG: ', features)
+    df = smaller_df
 
-    X, y, target_names = preprocess(target, target_txt, features)
+    X = df[features].to_numpy()
+    y = df[target].to_numpy()
+
     # Split test and train
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+    print('X_test size: ', str(len(X_test)))
+
+    print('y_test size: ', str(len(y_test)))
 
     lr = LinearRegression()
     lr.fit(X_train, y_train)

@@ -148,9 +148,9 @@ def kMeans():
 def regression():
 
     target = request.args.get('target')
-    features = request.args.getlist('features')
+    feature = request.args.getlist('feature')
 
-    plot_name = machineLearning.regression(target, features)
+    plot_name = machineLearning.regression(target, feature)
 
     return render_template('result.html', plot=plot_name)
 

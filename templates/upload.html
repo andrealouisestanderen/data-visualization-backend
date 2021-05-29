@@ -22,7 +22,7 @@
         </h2>
     </div>
     <div
-        style="opacity: .90; color: #006d77; text-align: center; padding-top: 40px; background-color: #edf6f9; width: 1000px; align-content: center; margin: 0 auto; padding-bottom: 10px; margin-top: 50px;">
+        style="opacity: .90; color: #006d77; text-align: center; padding-top: 40px; background-color: #edf6f9; width: 1000px; align-content: center; margin: 0 auto; margin-top: 50px;">
         <h2 style="text-align: center; color: #006d77; padding-bottom: 50px; font-weight: 100;">
             Choose A File For The Visualization
         </h2>
@@ -63,7 +63,7 @@
             margin-top: 80px;" type=submit value="Upload file">
         </form>
         <form name="MLform" onsubmit="return OnSubmitForm();"
-            style="visibility: visible; position: relative; bottom: 90px;">
+            style="visibility: visible; position: relative; bottom: 80px;">
             <h2 style="text-align: center; color: #006d77; padding-bottom: 10px; font-weight: 100;">
                 Or Try Some Machine Learning!
             </h2>
@@ -74,7 +74,8 @@
             </div>
             <div id="dd_targ" style="width: 200; visibility: hidden;">
                 <label id="targ_label_name">Name of target variable</label>
-                <select name="target" id="target">
+                <select name="target" id="target" onchange="return removeTarg()">
+                    <option value="gname">terrorist group</option>
                     <option value="region">region</option>
                     <option value="country">country</option>
                     <option selected="selected" value="suicide">suicide</option>
@@ -95,6 +96,7 @@
             <div id="dd_feat" style="width: 200; visibility: hidden; padding-top: 5px;">
                 <label style="position: relative; bottom: 55px" id="feat_label_name">Select your features</label>
                 <select size="5" name="features" id="features" multiple>
+                    <option value="gname">terrorist group</option>
                     <option value="region">region</option>
                     <option value="country">country</option>
                     <option value="suicide">suicide</option>
@@ -112,8 +114,28 @@
                     <option value="iyear">year</option>
                 </select>
             </div>
-            <div id="warning"
-                style="font-size: 10px; padding-top: 20px; font-weight: bold; visibility: hidden; position: relative;">
+            <div id="dd_feat_single" style="width: 200; visibility: hidden; position: relative; bottom: 78px">
+                <label id="feat_label_name">Select your features</label>
+                <select name="feature" id="feature">
+                    <option value="gname">terrorist group</option>
+                    <option value="region">region</option>
+                    <option value="country">country</option>
+                    <option value="suicide">suicide</option>
+                    <option value="success">success</option>
+                    <option value="property">property harmed</option>
+                    <option value="specificity">specificity</option>
+                    <option selected="selected" value="nkill">number killed</option>
+                    <option value="nwound">number wounded</option>
+                    <option value="nkillus">number killed us</option>
+                    <option value="nkillter">number killed terrorists</option>
+                    <option value="attacktype1">attacktype</option>
+                    <option value="targtype1">targettype</option>
+                    <option value="iday">day</option>
+                    <option value="imonth">month</option>
+                    <option value="iyear">year</option>
+                </select>
+            </div>
+            <div id="warning" style="font-size: 10px; font-weight: bold; visibility: hidden; position: relative;">
                 NB: DO NOT CHOOSE THE TARGET AS A FEATURE!
             </div>
             <div style="padding-top: 30px; position: relative;">
@@ -154,8 +176,29 @@
         function display() {
             document.getElementById('submitButton').style.visibility = 'visible';
             document.getElementById('dd_targ').style.visibility = 'visible';
-            document.getElementById('dd_feat').style.visibility = 'visible';
             document.getElementById('warning').style.visibility = 'visible';
+
+            if (document.MLform.radio_chart[2].checked == true) {
+                document.getElementById("dd_feat").style.visibility = 'hidden';
+                document.getElementById("dd_feat_single").style.visibility = 'visible';
+            } else {
+                document.getElementById('dd_feat').style.visibility = 'visible';
+                document.getElementById("dd_feat_single").style.visibility = 'hidden';
+            }
+        }
+        // THIS FUNCTION DOES NOT WORK...
+        function removeTarg() {
+            var select = document.getElementById("dd_feat");
+            console.log('this.value:')
+            console.log(this.value)
+            for (var i = 0; i < select.length; i++) {
+                var option = select.options[i];
+                console.log('option:')
+                console.log(option)
+                if (option == this.value) {
+                    option.Attributes.Add("disabled", "disabled");
+                }
+            }
         }
     </script>
 </body>
