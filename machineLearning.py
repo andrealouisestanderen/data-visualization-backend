@@ -78,13 +78,12 @@ def gaussianNB(target, features):
     return plot_name, score
 
 
-def kMeans(target, features):
+def kMeans(features):
     """ unsupervised, clustering classification"""
 
     df = smaller_df
 
     X = df[features].to_numpy()
-    y = df[target].to_numpy()
 
     kmeans = KMeans(n_clusters=3)  # 3 - clusters
     grouping = kmeans.fit(X)
