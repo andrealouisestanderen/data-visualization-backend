@@ -139,9 +139,9 @@ def kMeans():
     target = request.args.get('target')
     features = request.args.getlist('features')
 
-    plot_name = machineLearning.kMeans(target, features)
+    plot_name, silhouette_avg = machineLearning.kMeans(target, features)
 
-    return render_template('result.html', plot=plot_name)
+    return render_template('result.html', plot=plot_name, score=silhouette_avg)
 
 
 @app.route("/regression")

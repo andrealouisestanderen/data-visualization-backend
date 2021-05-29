@@ -1,34 +1,23 @@
 import pandas as pd
 import numpy as np
-import itertools
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import seaborn as sns
 import os
 import time
 import colors
 
 # prep
-from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
-from sklearn.preprocessing import LabelEncoder, StandardScaler, MaxAbsScaler, QuantileTransformer, OneHotEncoder
+from sklearn.model_selection import train_test_split
 
 # models
-from sklearn.linear_model import LogisticRegression, LogisticRegressionCV, LinearRegression, Ridge, RidgeCV
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.svm import SVC
+from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import GaussianNB
-from sklearn.neighbors import KNeighborsClassifier
-from astroML.utils import completeness_contamination
 from sklearn.cluster import KMeans
 
 # validation libraries
-from IPython.display import display
 from sklearn import metrics
-from matplotlib.colors import ListedColormap
 
-from sklearn.cluster import KMeans
+# colors
 from matplotlib.colors import ListedColormap, colorConverter, LinearSegmentedColormap
 
 # Read csv file
@@ -82,19 +71,21 @@ def kMeans(target, features):
     y = df[target].to_numpy()
 
     kmeans = KMeans(n_clusters=3)  # 3 - clusters
-    kmeans.fit(X)
+    grouping = kmeans.fit(X)
 
     # The cluster centers are stored in thecluster_centers_ attribute, and we plot them as triangles
-    discrete_scatter(X[:, 0], X[:, 1], kmeans.labels_, markers='o')
+    discrete_scatter(X[:, 0], X[:, 1], grouping.labels_, markers='o')
     discrete_scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[
                      :, 1], markers='^', markeredgewidth=2)  # range(len(kmeans.cluster_centers_)),
 
     plt.title(
         'Kmeans clustering with 3 clusters based on #killed, \n #killedterrorists, the day and the month.')
 
+    silhouette_avg = metrics.silhouette_score(X, grouping.labels_)
+
     plot_name = saveImage()
 
-    return plot_name
+    return plot_name, silhouette_avg
 
 
 def regression(target, features):
@@ -106,10 +97,6 @@ def regression(target, features):
 
     # Split test and train
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-
-    print('X_test size: ', str(len(X_test)))
-
-    print('y_test size: ', str(len(y_test)))
 
     lr = LinearRegression()
     lr.fit(X_train, y_train)
