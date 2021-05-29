@@ -49,8 +49,24 @@ def gaussianNB(target, features):
     y_pred = gnb.fit(X_train, y_train).predict(X_test)
 
     disp = metrics.plot_confusion_matrix(gnb, X_test, y_test)
-    disp.figure_.suptitle(
-        "Confusion Matrix predicting success based on #kills and #wounded")
+
+    feats_in_title = ''
+    intermediate_title = ' '
+    for feat in range(len(features)):
+        sub_title = features[feat]
+        if feat == len(features)-1:
+            arr = list(intermediate_title)[::-1]
+            arr.pop(1)
+            string = ''.join(arr)
+            feats_in_title = string[::-1]
+            feats_in_title += 'and ' + features[feat] + '.'
+        else:
+            intermediate_title += sub_title + ', '
+
+    title = "Confusion Matrix predicting " + \
+        target + " based on\n" + feats_in_title
+
+    disp.figure_.suptitle(title)
     #x_vals = range(0, len(target_names))
     #plt.xticks(x_vals, target_names, rotation=25, fontsize=5)
     #plt.yticks(x_vals, target_names, rotation=75, fontsize=5)
@@ -78,8 +94,21 @@ def kMeans(target, features):
     discrete_scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[
                      :, 1], markers='^', markeredgewidth=2)  # range(len(kmeans.cluster_centers_)),
 
+    feats_in_title = ''
+    intermediate_title = ' '
+    for feat in range(len(features)):
+        sub_title = features[feat]
+        if feat == len(features)-1:
+            arr = list(intermediate_title)[::-1]
+            arr.pop(1)
+            string = ''.join(arr)
+            feats_in_title = string[::-1]
+            feats_in_title += 'and ' + features[feat] + '.'
+        else:
+            intermediate_title += sub_title + ', '
+
     plt.title(
-        'Kmeans clustering with 3 clusters based on #killed, \n #killedterrorists, the day and the month.')
+        'Kmeans clustering with 3 clusters based on\n' + feats_in_title)
 
     silhouette_avg = metrics.silhouette_score(X, grouping.labels_)
 
@@ -109,7 +138,7 @@ def regression(target, features):
     plt.xlabel(target)
     plt.ylabel(features[0])
 
-    plt.title('A regression model for #wounded and #killed')
+    plt.title('A regression model for ' + target + ' and ' + features[0] + '.')
 
     variance_score = metrics.explained_variance_score(y_test, y_pred)
 
