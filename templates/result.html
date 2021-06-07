@@ -5,7 +5,7 @@
    style="background-image: url(../static/example.png); opacity: .30; background-size: 100%; position: fixed; top: 0; bottom: 0; right: 0; left: 0;">
 </div>
 
-<body style="font-family: Verdana, sans-serif; font-variant: small-caps;">
+<body onload="return display()" style="font-family: Verdana, sans-serif; font-variant: small-caps;">
 
    <div style="background-color: #83c5be; opacity: .99; margin-top: -30px; margin-left: -8px; margin-right: -8px;">
       <h1 style="text-align: center; color: #ffddd2; padding-top: 20px; font-size: 45px; font-weight: 100;">
@@ -22,8 +22,9 @@
          style="text-align: center; opacity: .99; text-align: center; margin: 0 auto; margin-top: 20px; text-align: center;">
          <img src="{{ url_for('static', filename=plot) }}" height="500px" />
       </div>
-
-      The accuracy of this model is: {{ score }}
+      <div style="visibility: visible;" id="score">
+         The accuracy of this model is: {{ score }}
+      </div>
    </div>
    <form style="text-align: center; opacity: .99;">
       <input style="font-size: 20px;
@@ -35,6 +36,13 @@
       text-align: center;
       cursor: pointer;" type="button" value="Go back!" onclick="history.back()">
    </form>
+   <script>
+      function display() {
+         if ('{{ score }}' === 'none') {
+            document.getElementById("score").style.visibility = 'hidden';
+         }
+      }
+   </script>
 
 </body>
 

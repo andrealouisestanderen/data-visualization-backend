@@ -25,7 +25,7 @@ def getColumns(file):
 def barChart(file, column, sort_by_count, bars):
     df = pd.read_csv('./files/' + file)
     sort = sort_by_count == "1"
-    df_parsed = df[[column]]
+    df_parsed = df[[column]].dropna()
     values = df_parsed[column].value_counts(sort=sort).index.tolist()
     counts = df_parsed[column].value_counts(sort=sort).tolist()
     if bars == 'head':
@@ -33,7 +33,8 @@ def barChart(file, column, sort_by_count, bars):
         counts = df_parsed[column].value_counts(sort=sort).tolist()[:10]
 
     if bars == 'tail':
-        values = df_parsed[column].value_counts(sort=sort).index.tolist()[-10:]
+        values = df_parsed[column].value_counts(
+            sort=sort).index.tolist()[-10:]
         counts = df_parsed[column].value_counts(sort=sort).tolist()[-10:]
 
     # Make plot
@@ -112,7 +113,7 @@ def lineChart(file, time, col2, col3, col4, bins):
     columns = [col2, col3, col4]
     for col in columns:
         if col != 'None':
-            df_parsed = df[[time, col]]
+            df_parsed = df[[time, col]].dropna()
 
             if bins != 'auto':
                 bins = int(bins)
@@ -141,7 +142,9 @@ def lineChart(file, time, col2, col3, col4, bins):
 
 
 def scatterPlot(file, column1, column2, bins):
-    df = pd.read_csv('./files/' + file)
+    full_df = pd.read_csv('./files/' + file)
+
+    df = full_df[[column1, column2]].dropna()
 
     if bins != 'auto':
         bins = int(bins)

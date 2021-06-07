@@ -8,6 +8,7 @@ import colors
 
 # prep
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 
 # models
 from sklearn.linear_model import LinearRegression
@@ -33,9 +34,27 @@ group_names = clean_df['gname'].value_counts()[0:10].index.tolist()
 
 smaller_df = clean_df.loc[clean_df['gname'].isin(group_names)]
 
+# transform gname to numerical values
+le = LabelEncoder()
+le.fit(smaller_df[['gname']])
+newcol = le.transform(smaller_df[['gname']])
+smaller_df.drop('gname', axis=1, inplace=True)
+smaller_df['gname'] = newcol
+
 
 def gaussianNB(target, features):
     """ supervised """
+
+    # categories = set(['gname', 'region', 'country',
+    # 'attacktype1_txt', 'targtype1_txt'])
+
+    # if target in categories:
+    #    df = pd.get_dummies(smaller_df, columns=[target])
+
+    # else:
+    #    df = smaller_df
+
+    # print(df.describe)
 
     df = smaller_df
 
@@ -67,9 +86,8 @@ def gaussianNB(target, features):
         target + " based on\n" + feats_in_title
 
     disp.figure_.suptitle(title)
-    #x_vals = range(0, len(target_names))
-    #plt.xticks(x_vals, target_names, rotation=25, fontsize=5)
-    #plt.yticks(x_vals, target_names, rotation=75, fontsize=5)
+    plt.xticks(rotation=90, fontsize=5)
+    plt.yticks(fontsize=5)
 
     score = "{:.2f}".format(gnb.score(X_test, y_test))
 
@@ -87,6 +105,8 @@ def kMeans(features):
 
     kmeans = KMeans(n_clusters=3)  # 3 - clusters
     grouping = kmeans.fit(X)
+
+    print('LABELS: ', grouping.labels_)
 
     # The cluster centers are stored in thecluster_centers_ attribute, and we plot them as triangles
     discrete_scatter(X[:, 0], X[:, 1], grouping.labels_, markers='o')
